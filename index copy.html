@@ -23,7 +23,6 @@
     <!-- Export engines -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
       :root {
@@ -312,29 +311,12 @@
 
       .rupee-box {
         display: flex;
-        align-items: flex-start;
-        gap: 3mm;
+        align-items: center;
         padding: 2mm 3mm;
         font-family: Arial, Helvetica, sans-serif;
-        color: #222;
-      }
-
-      .rupee-symbol {
-        flex: 0 0 auto;
         font-size: 23px;
         font-weight: 700;
-        line-height: 1;
-      }
-
-      .amount-words {
-        flex: 1;
-        padding-top: 0.5mm;
-        font-family: "Kalam", "Segoe UI", sans-serif;
-        font-size: 14px;
-        line-height: 1.35;
-        font-weight: 500;
-        overflow-wrap: anywhere;
-        word-break: break-word;
+        color: #222;
       }
 
       .total-box {
@@ -382,30 +364,7 @@
         margin-top: auto;
         padding-top: 9mm;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        gap: 10mm;
-      }
-
-      .whatsapp-share {
-        border: 0;
-        background: transparent;
-        color: #128c7e;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 1mm;
-        font-size: 8px;
-        font-weight: 700;
-        padding: 2mm;
-      }
-
-      .whatsapp-share svg {
-        width: 11mm;
-        height: 11mm;
-        display: block;
+        justify-content: flex-end;
       }
 
       .signature-block {
@@ -608,27 +567,14 @@
       .export-text.export-description {
         width: 100%;
         min-height: 11mm;
-        height: auto;
-        display: block;
-        align-items: initial;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+
         font-size: 14px;
-        line-height: 1.15;
+        line-height: 1.03;
         text-align: left;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-        padding: 1mm 0;
-      }
-
-      .export-clone tbody td {
-        height: auto;
-        min-height: 15mm;
-        overflow: visible;
-      }
-
-      .export-clone tr {
-        break-inside: avoid;
-        page-break-inside: avoid;
       }
 
       /* Quantity, Rate and Unit cells */
@@ -655,97 +601,6 @@
       /* Keep exported text inside its cell */
       .export-clone td {
         overflow: hidden;
-      }
-
-      /* Export clones must always use the exact A4 canvas size. */
-      .export-clone {
-        width: 210mm !important;
-        min-width: 210mm !important;
-        max-width: 210mm !important;
-        min-height: 297mm !important;
-        height: 297mm !important;
-        overflow: hidden !important;
-        background: var(--paper) !important;
-      }
-
-      .export-clone .export-meta {
-        flex: 1 1 auto !important;
-        width: auto !important;
-        max-width: none !important;
-        min-width: 0 !important;
-        display: block !important;
-        position: static !important;
-        transform: none !important;
-        white-space: nowrap !important;
-        line-height: 1.05 !important;
-      }
-
-      .export-clone .meta-line {
-        align-items: baseline !important;
-        min-height: 20px !important;
-      }
-
-      .export-clone .signature-area {
-        margin-top: auto !important;
-        position: static !important;
-        transform: none !important;
-        flex-shrink: 0 !important;
-      }
-
-      .export-clone .signature-block {
-        flex-shrink: 0 !important;
-      }
-
-      @media (max-width: 850px) {
-        .paper-holder {
-          width: 100%;
-          overflow-x: auto;
-          padding: 0 8px 20px;
-        }
-
-        .paper {
-          width: 100%;
-          min-height: auto;
-          margin: 0 auto;
-          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-        }
-
-        .invoice-inner {
-          min-height: auto;
-          padding: 20px 14px 24px;
-        }
-
-        .bill-meta {
-          gap: 12px;
-        }
-
-        .meta-line {
-          min-width: 0;
-        }
-
-        .meta-label {
-          font-size: 9px;
-        }
-
-        .ink-input,
-        .ink-textarea {
-          font-size: 14px;
-        }
-
-        .desc-input {
-          font-size: 12px;
-        }
-
-        .signature-area {
-          margin-top: 28px;
-          padding-top: 20px;
-        }
-      }
-
-      /* Never apply the responsive screen rules to an exported A4 clone. */
-      .export-clone .invoice-inner {
-        min-height: 297mm !important;
-        padding: 12mm 11mm 10mm !important;
       }
     </style>
   </head>
@@ -875,12 +730,7 @@
             </table>
 
             <div class="footer-zone">
-              <div class="rupee-box">
-                <span class="rupee-symbol">₹</span>
-                <span id="totalWords" class="amount-words"
-                  >Rupees Zero Only</span
-                >
-              </div>
+              <div class="rupee-box">₹</div>
               <div class="total-box">
                 <div class="total-label">TOTAL</div>
                 <div class="total-value">
@@ -891,27 +741,8 @@
             </div>
           </section>
 
-          <!-- SIGNATURE / WHATSAPP -->
+          <!-- SIGNATURE -->
           <footer class="signature-area">
-            <button
-              id="whatsappBtn"
-              class="whatsapp-share no-print"
-              type="button"
-              aria-label="Share bill on WhatsApp"
-              title="Share bill on WhatsApp"
-            >
-              <svg viewBox="0 0 32 32" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M19.11 17.39c-.27-.14-1.59-.78-1.84-.87-.25-.09-.43-.14-.61.14-.18.27-.7.87-.86 1.05-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.59-1.5-1.86-.16-.27-.02-.42.12-.56.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.81c.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.66.21 1.26.18 1.73.11.53-.08 1.59-.65 1.81-1.28.23-.63.23-1.17.16-1.28-.07-.11-.25-.18-.52-.32z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M16.02 3.2c-7.08 0-12.84 5.75-12.84 12.83 0 2.26.59 4.46 1.72 6.4L3.08 28.8l6.52-1.71a12.82 12.82 0 0 0 6.42 1.72h.01c7.08 0 12.83-5.76 12.83-12.84S23.1 3.2 16.02 3.2zm0 23.45h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.87 1.02 1.03-3.77-.25-.39a10.61 10.61 0 1 1 8.89 4.85z"
-                />
-              </svg>
-              <span>WhatsApp</span>
-            </button>
             <div class="signature-block">
               <div class="for-text">For UMA ELECTRICAL WORKS</div>
               <div class="signature">Umashankar</div>
@@ -1079,42 +910,6 @@
 
         return clone;
       }
-      const STORAGE_KEY = "uma-electrical-works-bill-data-v1";
-
-      function collectFormData() {
-        return {
-          billNo: document.getElementById("billNo").value,
-          billDate: document.getElementById("billDate").value,
-          customer: document.getElementById("customer").value,
-          rows: [...body.rows].map((row) => ({
-            description: row.querySelector(".desc-input").value,
-            qty: row.querySelector(".qty-input").value,
-            rate: row.querySelector(".rate-input").value,
-            unit: row.querySelector(".unit-input").value,
-          })),
-        };
-      }
-
-      function saveFormData(showMessage = false) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(collectFormData()));
-        if (showMessage) showToast("Draft saved");
-      }
-
-      function loadFormData() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-          if (!saved || !Array.isArray(saved.rows)) return false;
-          document.getElementById("billNo").value = saved.billNo || "";
-          document.getElementById("billDate").value = saved.billDate || "";
-          document.getElementById("customer").value = saved.customer || "";
-          buildRows(saved.rows);
-          return true;
-        } catch (error) {
-          console.warn("Could not load saved draft:", error);
-          return false;
-        }
-      }
-
       function createRow(data = {}) {
         const tr = document.createElement("tr");
 
@@ -1155,7 +950,6 @@
             if (el === desc) autoResize(desc);
             updateRow(tr);
             updateTotal();
-            saveFormData();
           });
         });
 
@@ -1183,78 +977,6 @@
         row.querySelector(".amount-ps").textContent = parts.ps;
       }
 
-      function numberToIndianWords(value) {
-        const ones = [
-          "Zero",
-          "One",
-          "Two",
-          "Three",
-          "Four",
-          "Five",
-          "Six",
-          "Seven",
-          "Eight",
-          "Nine",
-          "Ten",
-          "Eleven",
-          "Twelve",
-          "Thirteen",
-          "Fourteen",
-          "Fifteen",
-          "Sixteen",
-          "Seventeen",
-          "Eighteen",
-          "Nineteen",
-        ];
-        const tens = [
-          "",
-          "",
-          "Twenty",
-          "Thirty",
-          "Forty",
-          "Fifty",
-          "Sixty",
-          "Seventy",
-          "Eighty",
-          "Ninety",
-        ];
-
-        function belowThousand(number) {
-          let words = "";
-          if (number >= 100) {
-            words += ones[Math.floor(number / 100)] + " Hundred";
-            number %= 100;
-            if (number) words += " ";
-          }
-          if (number >= 20) {
-            words += tens[Math.floor(number / 10)];
-            number %= 10;
-            if (number) words += " " + ones[number];
-          } else if (number > 0) {
-            words += ones[number];
-          }
-          return words;
-        }
-
-        value = Math.floor(Number(value) || 0);
-        if (value === 0) return "Zero";
-
-        const parts = [];
-        const crore = Math.floor(value / 10000000);
-        value %= 10000000;
-        const lakh = Math.floor(value / 100000);
-        value %= 100000;
-        const thousand = Math.floor(value / 1000);
-        value %= 1000;
-
-        if (crore) parts.push(belowThousand(crore) + " Crore");
-        if (lakh) parts.push(belowThousand(lakh) + " Lakh");
-        if (thousand) parts.push(belowThousand(thousand) + " Thousand");
-        if (value) parts.push(belowThousand(value));
-
-        return parts.join(" ");
-      }
-
       function updateTotal() {
         let total = 0;
 
@@ -1267,15 +989,6 @@
         const parts = moneyParts(total);
         totalRs.textContent = parts.rs;
         totalPs.textContent = parts.ps;
-
-        const totalWords = document.getElementById("totalWords");
-        if (totalWords) {
-          const words = numberToIndianWords(total);
-          const hasPaise = parts.ps !== "00";
-          totalWords.textContent = hasPaise
-            ? `Rupees ${words} and ${parts.ps} Paise Only`
-            : `Rupees ${words} Only`;
-        }
       }
 
       function buildRows(rows) {
@@ -1295,15 +1008,6 @@
         );
       }
 
-      ["billNo", "billDate", "customer"].forEach((id) => {
-        document
-          .getElementById(id)
-          .addEventListener("input", () => saveFormData());
-        document
-          .getElementById(id)
-          .addEventListener("change", () => saveFormData());
-      });
-
       // Add a fresh structural row and preserve all existing data.
       document.getElementById("addRowBtn").addEventListener("click", () => {
         const row = createRow();
@@ -1322,70 +1026,64 @@
         for (let i = 0; i < 7; i++) createRow();
         renumberRows();
         updateTotal();
-        saveFormData();
         showToast("Form cleared");
       });
 
-      // ------------------------------------------------------------------
-      // Export helpers
-      // Keep one deterministic A4 export pipeline for PNG and PDF.
-      function mountExportClone(invoice) {
-        const clone = createExportClone(invoice);
-        clone.classList.add("export-clone", "exporting");
-        clone.style.position = "fixed";
-        clone.style.left = "-100000px";
-        clone.style.top = "0";
-        clone.style.margin = "0";
-        clone.style.boxShadow = "none";
-        clone.style.zIndex = "-1";
-        clone.style.pointerEvents = "none";
-        document.body.appendChild(clone);
-        return clone;
-      }
+      // PNG export: high-resolution A4 capture.
+      // PNG export: high-resolution A4 capture.
+      document.getElementById("pngBtn").addEventListener("click", async () => {
+        const invoice = document.getElementById("invoice");
 
-      async function waitForExportLayout() {
-        await document.fonts.ready;
-        await new Promise((resolve) =>
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => setTimeout(resolve, 80)),
-          ),
-        );
-      }
+        let exportClone = null;
 
-      async function renderInvoiceCanvas(invoice) {
-        const exportClone = mountExportClone(invoice);
         try {
-          await waitForExportLayout();
+          showToast("Creating PNG…");
 
-          return await html2canvas(exportClone, {
-            scale: 3,
+          // Wait until Google Fonts are fully loaded.
+          await document.fonts.ready;
+
+          // Create a safe copy where inputs/textareas become normal text.
+          exportClone = createExportClone(invoice);
+
+          // Position the clone outside the visible page.
+          exportClone.style.position = "absolute";
+          exportClone.style.left = "0";
+          exportClone.style.top = "0";
+          exportClone.style.margin = "0";
+          exportClone.style.boxShadow = "none";
+          exportClone.style.zIndex = "-1";
+
+          document.body.appendChild(exportClone);
+
+          // Allow the browser to finish layout and font rendering.
+          await new Promise((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve)),
+          );
+
+          const canvas = await html2canvas(exportClone, {
+            scale: 4,
             useCORS: true,
             allowTaint: false,
             backgroundColor: "#fffdf8",
             logging: false,
-            width: exportClone.scrollWidth,
-            height: exportClone.scrollHeight,
-            windowWidth: exportClone.scrollWidth,
-            windowHeight: exportClone.scrollHeight,
+
+            // Capture the actual A4 dimensions.
+            width: exportClone.offsetWidth,
+            height: exportClone.offsetHeight,
+
+            windowWidth: exportClone.offsetWidth,
+            windowHeight: exportClone.offsetHeight,
+
+            // Prevent unexpected transparent areas.
             scrollX: 0,
             scrollY: 0,
           });
-        } finally {
-          exportClone.remove();
-        }
-      }
 
-      // PNG export
-      document.getElementById("pngBtn").addEventListener("click", async () => {
-        try {
-          showToast("Creating PNG…");
-          const canvas = await renderInvoiceCanvas(
-            document.getElementById("invoice"),
-          );
+          const link = document.createElement("a");
 
           const bill =
             document.getElementById("billNo").value.trim() || "draft";
-          const link = document.createElement("a");
+
           link.download = `UMA-Electrical-Works-Bill-${bill}.png`;
           link.href = canvas.toDataURL("image/png");
           link.click();
@@ -1394,107 +1092,60 @@
         } catch (error) {
           console.error("PNG export error:", error);
           showToast("PNG export failed");
+        } finally {
+          // Remove the temporary export copy.
+          if (exportClone) {
+            exportClone.remove();
+          }
         }
       });
 
-      // PDF export: convert the already-rendered canvas directly to jsPDF.
-      // This avoids html2pdf's blank-page issue when exporting a detached clone.
+      // ---------------------------------------------------------------
+      // PDF export: html2pdf maps the finished A4 DOM into an A4 PDF.
       document.getElementById("pdfBtn").addEventListener("click", async () => {
+        const invoice = document.getElementById("invoice");
+        invoice.classList.add("exporting");
+
         try {
           showToast("Creating PDF…");
-          const canvas = await renderInvoiceCanvas(
-            document.getElementById("invoice"),
-          );
 
           const bill =
             document.getElementById("billNo").value.trim() || "draft";
 
-          const { jsPDF } = window.jspdf || {};
-          if (!jsPDF) {
-            throw new Error("jsPDF is not loaded");
-          }
-
-          const pdf = new jsPDF({
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait",
-            compress: true,
-          });
-
-          const imageData = canvas.toDataURL("image/jpeg", 0.98);
-          pdf.addImage(imageData, "JPEG", 0, 0, 210, 297, undefined, "FAST");
-          pdf.save(`UMA-Electrical-Works-Bill-${bill}.pdf`);
-
-          showToast("PDF saved");
-        } catch (error) {
-          console.error("PDF export error:", error);
-          showToast("PDF export failed");
-        }
-      });
-
-      document
-        .getElementById("whatsappBtn")
-        .addEventListener("click", async () => {
-          let exportClone = null;
-          try {
-            showToast("Preparing WhatsApp share…");
-            await document.fonts.ready;
-            const invoice = document.getElementById("invoice");
-            exportClone = createExportClone(invoice);
-            exportClone.classList.add("exporting");
-            exportClone.style.position = "absolute";
-            exportClone.style.left = "0";
-            exportClone.style.top = "0";
-            exportClone.style.margin = "0";
-            exportClone.style.boxShadow = "none";
-            exportClone.style.zIndex = "9999";
-            exportClone.style.pointerEvents = "none";
-            document.body.appendChild(exportClone);
-
-            await new Promise((resolve) =>
-              requestAnimationFrame(() => requestAnimationFrame(resolve)),
-            );
-
-            const canvas = await html2canvas(exportClone, {
+          const options = {
+            margin: 0,
+            filename: `UMA-Electrical-Works-Bill-${bill}.pdf`,
+            image: {
+              type: "jpeg",
+              quality: 0.98,
+            },
+            html2canvas: {
               scale: 3,
               useCORS: true,
+              allowTaint: false,
               backgroundColor: "#fffdf8",
               logging: false,
-            });
+            },
+            jsPDF: {
+              unit: "mm",
+              format: "a4",
+              orientation: "portrait",
+              compress: true,
+            },
+            pagebreak: {
+              mode: ["avoid-all", "css", "legacy"],
+            },
+          };
 
-            const blob = await new Promise((resolve) =>
-              canvas.toBlob(resolve, "image/png"),
-            );
-            const file = new File([blob], "UMA-Electrical-Works-Bill.png", {
-              type: "image/png",
-            });
-
-            if (
-              navigator.share &&
-              (!navigator.canShare || navigator.canShare({ files: [file] }))
-            ) {
-              await navigator.share({
-                files: [file],
-                title: "UMA Electrical Works Bill",
-                text: "Please find the bill attached.",
-              });
-              showToast("Share window opened");
-            } else {
-              const message = encodeURIComponent(
-                "Please find the UMA Electrical Works bill attached.",
-              );
-              window.open(`https://wa.me/?text=${message}`, "_blank");
-              showToast("WhatsApp opened. Attach the PNG manually.");
-            }
-          } catch (error) {
-            if (error.name !== "AbortError") {
-              console.error("WhatsApp share error:", error);
-              showToast("Sharing cancelled or unavailable");
-            }
-          } finally {
-            if (exportClone) exportClone.remove();
-          }
-        });
+          await html2pdf().set(options).from(invoice).save();
+          showToast("PDF saved");
+        } catch (error) {
+          console.error(error);
+          showToast("PDF export failed");
+        } finally {
+          invoice.classList.remove("exporting");
+        }
+      });
 
       // Attempt the requested placeholder path if the embedded logo ever fails.
       document
@@ -1510,10 +1161,7 @@
         });
 
       // Start with the reference bill values so the visual layout is immediately inspectable.
-      if (!loadFormData()) {
-        buildRows(initialRows);
-        saveFormData();
-      }
+      buildRows(initialRows);
     </script>
   </body>
 </html>
