@@ -669,27 +669,61 @@
       }
 
       .export-clone .export-meta {
-        flex: 1 1 auto !important;
-        width: auto !important;
+        flex: 1 1 0 !important;
+        width: 0 !important;
         max-width: none !important;
         min-width: 0 !important;
-        display: block !important;
+        height: 20px !important;
+        display: flex !important;
+        align-items: center !important;
         position: static !important;
         transform: none !important;
         white-space: nowrap !important;
-        line-height: 1.05 !important;
+        line-height: 20px !important;
+        vertical-align: middle !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
       }
 
       .export-clone .meta-line {
-        align-items: baseline !important;
+        display: flex !important;
+        align-items: center !important;
         min-height: 20px !important;
+        height: 20px !important;
+        line-height: 20px !important;
+      }
+
+      .export-clone .meta-label {
+        display: inline-flex !important;
+        align-items: center !important;
+        height: 20px !important;
+        line-height: 20px !important;
       }
 
       .export-clone .signature-area {
         margin-top: auto !important;
+        min-height: 30mm !important;
+        height: 30mm !important;
+        padding-top: 9mm !important;
         position: static !important;
         transform: none !important;
         flex-shrink: 0 !important;
+        align-items: flex-end !important;
+      }
+
+      .export-clone .signature-block {
+        align-self: flex-end !important;
+        margin-bottom: 0 !important;
+      }
+
+      .export-clone .signature {
+        min-height: 12mm !important;
+        height: 12mm !important;
+        padding-top: 2mm !important;
+        line-height: 0.9 !important;
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
       }
 
       .export-clone .signature-block {
@@ -697,26 +731,42 @@
       }
 
       @media (max-width: 850px) {
+        /* Keep the original A4-like mobile experience: the paper and its
+           header remain full-width internally, while the viewport scrolls. */
         .paper-holder {
           width: 100%;
+          max-width: 100%;
           overflow-x: auto;
-          padding: 0 8px 20px;
+          overflow-y: visible;
+          padding: 0 4px 20px;
+          -webkit-overflow-scrolling: touch;
         }
 
         .paper {
-          width: 100%;
-          min-height: auto;
-          margin: 0 auto;
+          width: 210mm;
+          min-width: 210mm;
+          min-height: 297mm;
+          margin: 0;
           box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
         }
 
         .invoice-inner {
-          min-height: auto;
-          padding: 20px 14px 24px;
+          min-height: 297mm;
+          padding: 12mm 11mm 10mm;
+        }
+
+        .table-wrap {
+          overflow-x: auto;
+          overflow-y: visible;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrap table {
+          min-width: 100%;
         }
 
         .bill-meta {
-          gap: 12px;
+          gap: 10mm;
         }
 
         .meta-line {
@@ -724,21 +774,21 @@
         }
 
         .meta-label {
-          font-size: 9px;
+          font-size: 10px;
         }
 
         .ink-input,
         .ink-textarea {
-          font-size: 14px;
+          font-size: 16px;
         }
 
         .desc-input {
-          font-size: 12px;
+          font-size: 14px;
         }
 
         .signature-area {
-          margin-top: 28px;
-          padding-top: 20px;
+          margin-top: auto;
+          padding-top: 9mm;
         }
       }
 
