@@ -15,6 +15,10 @@
       href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Libre+Baskerville:wght@700&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Export engines -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -68,7 +72,7 @@
       }
 
       .hand {
-        font-family: "Caveat", "Segoe Print", "Comic Sans MS", cursive;
+        font-family: "Kalam", "Segoe UI", sans-serif;
         color: var(--ink-blue);
         font-weight: 500;
       }
@@ -131,7 +135,7 @@
         outline: none;
         background: transparent;
         color: var(--ink-blue);
-        font-family: "Caveat", "Segoe Print", cursive;
+        font-family: "Kalam", "Segoe UI", sans-serif;
         font-weight: 500;
         font-size: 16px;
         line-height: 1.05;
@@ -174,7 +178,7 @@
         width: 8%;
       }
       col.desc {
-        width: 50%;
+        width: 52%;
       }
       col.qty {
         width: 10%;
@@ -183,7 +187,7 @@
         width: 10%;
       }
       col.unit {
-        width: 10%;
+        width: 8%;
       }
       col.amount {
         width: 12%;
@@ -224,7 +228,7 @@
 
       .sr-cell {
         text-align: center;
-        font-family: "Caveat", cursive;
+        font-family: "Kalam", "Segoe UI", sans-serif;
         color: var(--ink-blue);
         font-size: 17px;
         font-weight: 600;
@@ -236,8 +240,13 @@
         min-height: 11mm;
         height: 100%;
         display: block;
+        width: 100%;
+        min-width: 0;
         font-size: 14px;
         line-height: 1.03;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       .number-input,
@@ -263,7 +272,7 @@
         align-items: center;
         justify-content: center;
         color: var(--ink-blue);
-        font-family: "Caveat", cursive;
+        font-family: "Kalam", "Segoe UI", sans-serif;
         font-size: 15px;
         font-weight: 500;
       }
@@ -509,6 +518,90 @@
         box-shadow: none !important;
         margin: 0 !important;
       }
+
+      /* ---------- PNG / PDF EXPORT FIX ---------- */
+      /* ---------- PNG / PDF EXPORT FIX ---------- */
+
+      /* Normal text replacement for exported form fields */
+      .export-text {
+        display: block;
+        box-sizing: border-box;
+        min-width: 0;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+
+        color: var(--ink-blue);
+        font-family: "Caveat", "Segoe Print", "Comic Sans MS", cursive;
+        font-weight: 500;
+
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      /* BILL NO., DATE and M/s */
+      .export-text.export-meta {
+        display: block;
+        flex: 1 1 0;
+        width: 0;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+        border-bottom: 1px solid #4b5563;
+        padding: 0 2px 1px;
+        color: var(--ink-blue);
+        font-family: "Caveat", "Segoe Print", cursive;
+        font-size: 16px !important;
+        font-weight: 500;
+        line-height: 1.05;
+        white-space: nowrap;
+        overflow: hidden;
+        overflow-wrap: normal;
+        word-break: normal;
+        text-overflow: clip;
+      }
+
+      /* Description cells */
+      .export-text.export-description {
+        width: 100%;
+        min-height: 11mm;
+        height: 100%;
+
+        display: flex;
+        align-items: center;
+
+        font-size: 14px;
+        line-height: 1.03;
+        text-align: left;
+      }
+
+      /* Quantity, Rate and Unit cells */
+      .export-text.export-number,
+      .export-text.export-unit {
+        width: 100%;
+        height: 100%;
+        min-height: 15mm;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 16px;
+        line-height: 1.05;
+        text-align: center;
+
+        white-space: nowrap;
+        overflow: hidden;
+        overflow-wrap: normal;
+        word-break: normal;
+      }
+
+      /* Keep exported text inside its cell */
+      .export-clone td {
+        overflow: hidden;
+      }
     </style>
   </head>
 
@@ -744,7 +837,79 @@
         textarea.style.height = "auto";
         textarea.style.height = Math.max(textarea.scrollHeight, 48) + "px";
       }
+      // Creates an export-safe copy of the invoice.
+      // Form controls are replaced with normal HTML text so html2canvas
+      // renders their values correctly without clipping.
+      // Creates an export-safe copy of the invoice.
+      // Form controls are replaced with normal HTML text so html2canvas
+      // renders their values correctly without clipping.
+      function createExportClone(invoice) {
+        const clone = invoice.cloneNode(true);
 
+        clone.classList.add("export-clone");
+        clone.classList.add("exporting");
+
+        clone.querySelectorAll("input, textarea").forEach((field) => {
+          const text = document.createElement("div");
+
+          // Read the actual value from the ORIGINAL input.
+          let value = field.value || "";
+
+          // Keep the date in the same format as the input.
+          if (field.type === "date" && value) {
+            const [year, month, day] = value.split("-");
+            value = `${year}-${month}-${day}`;
+          }
+
+          text.textContent = value;
+          text.className = "export-text";
+
+          // Identify the type of field.
+          if (field.classList.contains("desc-input")) {
+            text.classList.add("export-description");
+          } else if (field.classList.contains("number-input")) {
+            text.classList.add("export-number");
+          } else if (field.classList.contains("unit-input")) {
+            text.classList.add("export-unit");
+          } else if (field.id === "billNo") {
+            text.classList.add("export-meta");
+          } else if (field.id === "billDate") {
+            text.classList.add("export-meta");
+          } else if (field.id === "customer") {
+            text.classList.add("export-meta");
+          }
+
+          // Copy ONLY the visual text properties.
+          // Do NOT copy width, height, padding, display, or flex styles.
+          const originalStyle = window.getComputedStyle(field);
+
+          text.style.fontFamily = originalStyle.fontFamily;
+          text.style.fontWeight = originalStyle.fontWeight;
+          text.style.color = originalStyle.color;
+          text.style.textAlign = originalStyle.textAlign;
+
+          // Explicit sizes for export.
+          if (
+            field.id === "billNo" ||
+            field.id === "billDate" ||
+            field.id === "customer"
+          ) {
+            text.style.fontFamily = '"Caveat", "Segoe Print", cursive';
+            text.style.fontSize = "16px";
+            text.style.lineHeight = "1.05";
+            text.style.fontWeight = "500";
+            text.style.textAlign = "left";
+          } else {
+            text.style.fontSize = originalStyle.fontSize;
+            text.style.lineHeight = originalStyle.lineHeight;
+          }
+
+          // Replace the form field with normal HTML text.
+          field.replaceWith(text);
+        });
+
+        return clone;
+      }
       function createRow(data = {}) {
         const tr = document.createElement("tr");
 
@@ -865,39 +1030,77 @@
       });
 
       // PNG export: high-resolution A4 capture.
+      // PNG export: high-resolution A4 capture.
       document.getElementById("pngBtn").addEventListener("click", async () => {
         const invoice = document.getElementById("invoice");
-        invoice.classList.add("exporting");
+
+        let exportClone = null;
 
         try {
           showToast("Creating PNG…");
 
-          const canvas = await html2canvas(invoice, {
+          // Wait until Google Fonts are fully loaded.
+          await document.fonts.ready;
+
+          // Create a safe copy where inputs/textareas become normal text.
+          exportClone = createExportClone(invoice);
+
+          // Position the clone outside the visible page.
+          exportClone.style.position = "absolute";
+          exportClone.style.left = "0";
+          exportClone.style.top = "0";
+          exportClone.style.margin = "0";
+          exportClone.style.boxShadow = "none";
+          exportClone.style.zIndex = "-1";
+
+          document.body.appendChild(exportClone);
+
+          // Allow the browser to finish layout and font rendering.
+          await new Promise((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(resolve)),
+          );
+
+          const canvas = await html2canvas(exportClone, {
             scale: 4,
             useCORS: true,
             allowTaint: false,
             backgroundColor: "#fffdf8",
             logging: false,
-            windowWidth: invoice.scrollWidth,
-            windowHeight: invoice.scrollHeight,
+
+            // Capture the actual A4 dimensions.
+            width: exportClone.offsetWidth,
+            height: exportClone.offsetHeight,
+
+            windowWidth: exportClone.offsetWidth,
+            windowHeight: exportClone.offsetHeight,
+
+            // Prevent unexpected transparent areas.
+            scrollX: 0,
+            scrollY: 0,
           });
 
           const link = document.createElement("a");
+
           const bill =
             document.getElementById("billNo").value.trim() || "draft";
+
           link.download = `UMA-Electrical-Works-Bill-${bill}.png`;
           link.href = canvas.toDataURL("image/png");
           link.click();
 
           showToast("PNG saved");
         } catch (error) {
-          console.error(error);
+          console.error("PNG export error:", error);
           showToast("PNG export failed");
         } finally {
-          invoice.classList.remove("exporting");
+          // Remove the temporary export copy.
+          if (exportClone) {
+            exportClone.remove();
+          }
         }
       });
 
+      // ---------------------------------------------------------------
       // PDF export: html2pdf maps the finished A4 DOM into an A4 PDF.
       document.getElementById("pdfBtn").addEventListener("click", async () => {
         const invoice = document.getElementById("invoice");
