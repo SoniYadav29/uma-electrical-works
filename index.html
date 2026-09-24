@@ -457,10 +457,10 @@
       }
 
       .action-bar {
-        position: sticky;
+        /* position: sticky; */
         top: 0;
         z-index: 50;
-        width: min(100%, 1120px);
+        width: min(97%, 1120px);
         margin: 14px auto;
         padding: 10px;
         display: flex;
@@ -470,7 +470,7 @@
         background: rgba(255, 255, 255, 0.94);
         backdrop-filter: blur(12px);
         border: 1px solid #d5d2cb;
-        border-radius: 12px;
+        /* border-radius: 12px; */
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
       }
 
@@ -478,10 +478,10 @@
         border: 1px solid #c8c5bd;
         background: #fff;
         color: #222;
-        border-radius: 7px;
-        padding: 9px 13px;
-        font-size: 13px;
-        font-weight: 700;
+        border-radius: 4px;
+        padding: 9px 9px;
+        font-size: 12px;
+        font-weight: 600;
         cursor: pointer;
         transition:
           transform 0.15s ease,
@@ -723,13 +723,11 @@
 
   <body>
     <div class="action-bar no-print">
-      <button class="action-btn primary" id="addRowBtn">
-        ➕ Add New Item Row
-      </button>
-      <button class="action-btn primary" id="addPageBtn">
-        📄 Add New Page
-      </button>
-      <button class="action-btn" id="clearBtn">🔄 Clear Form</button>
+      <div class="">
+        <button class="action-btn primary" id="addRowBtn">➕ New Item</button>
+        <button class="action-btn primary" id="addPageBtn">📄 New Page</button>
+        <button class="action-btn" id="clearBtn">🔄 Clear Form</button>
+      </div>
       <button class="action-btn blue" id="pngBtn">🖼️ Save as PNG</button>
       <button class="action-btn primary" id="pdfBtn">📄 Save as PDF</button>
     </div>
